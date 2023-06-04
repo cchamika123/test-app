@@ -1,0 +1,43 @@
+plugins {
+  id 'java-library'
+  id 'maven-publish'
+}
+
+group = 'com.zyntaxmind'
+version = '1.0.0'
+sourceCompatibility = '17'
+
+repositories {
+  mavenCentral()
+}
+
+java {
+  withSourcesJar()
+}
+
+dependencies {
+  implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.15.2'
+}
+
+publishing {
+  repositories {
+    maven {
+      name = "package-keycloak-admin-extension-model"
+      url = uri("https://maven.pkg.github.com/xdushan/keycloak-admin-extension-model")
+      credentials {
+        username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+        password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+        
+      }
+    }
+  }
+  publications {
+    gpr(MavenPublication) {
+      from(components.java)
+    }
+  }
+}
+
+tasks.named('test') {
+  useJUnitPlatform()
+}
